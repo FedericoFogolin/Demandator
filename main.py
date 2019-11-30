@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 import argparse
-from demandator import demandator
+from demandator_pkg import demandator
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
