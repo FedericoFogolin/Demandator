@@ -8,9 +8,10 @@ def parse_arguments():
     parser.add_argument("path", type=str, help="insert the path of the image to analyze")
     parser.add_argument("-v", "--verbose", action="count", default=0)
     parser.add_argument("-n", "--n_results", type = int, default=5, help="insert number of results to show")
+    parser.add_argument("-t", "--threshold", type = float, default=0.0, help="insert minimum treshold of accuracy for prediction to display ")
     args = parser.parse_args()
     return args
 
 if __name__ == "__main__":
     args = parse_arguments()
-    demandator.demandator(args.path, args.verbose, args.n_results)
+    demandator.demandator(args.path, args.verbose, args.n_results, args.threshold)
