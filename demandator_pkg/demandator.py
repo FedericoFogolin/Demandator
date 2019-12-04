@@ -32,8 +32,7 @@ def demandator (path, verbose, n_results, threshold):
         if float(result[2]) >= threshold:
             print('{}: {:.1%}'.format(result[1], float(result[2])))
         elif float(result[2]) < threshold:
-            breakgit branch
-            
+            break
         # stop iterations on the based on number of results asked
         # (count + 1) because enumerate starts from 0
         if (count+1) == n_results:
