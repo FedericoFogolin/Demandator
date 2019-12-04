@@ -9,9 +9,10 @@ def parse_arguments():
     parser.add_argument("-v", "--verbose", action="count", default=0)
     parser.add_argument("-n", "--n_results", type = int, default=5, help="insert number of results to show")
     parser.add_argument("-t", "--threshold", type = float, default=0.0, help="insert minimum treshold of accuracy for prediction to display ")
+    parser.add_argument("--graph", action='store_true', default=False, help="insert --graph if you want to see the graph of the prediction")
     args = parser.parse_args()
     return args
 
 if __name__ == "__main__":
     args = parse_arguments()
-    demandator.demandator(args.path, args.verbose, args.n_results, args.threshold)
+    demandator.demandator(args.path, args.verbose, args.n_results, args.threshold, args.graph)
