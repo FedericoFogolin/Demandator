@@ -40,6 +40,9 @@ def demandator (path, verbose, n_results, threshold, plot):
             if plot != True:
                 print('{}: {:.1%}'.format(result[1], float(result[2])))
         elif float(result[2]) < threshold:
+            if count == 0:
+                print('[INFO] No prediction found, try to lower the accuracy treshold with the parameter -t ')
+                exit()
             break
         # stop iterations on the based on number of results asked
         # (count + 1) because enumerate starts from 0
