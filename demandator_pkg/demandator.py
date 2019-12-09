@@ -1,9 +1,9 @@
+import demandator_pkg.plotter as plt
 import requests
 import ast
-from termgraph import termgraph as tg
-import terminalplot as tp
-import numpy as np
-from math import sin, pi
+import sqlite3
+import hashlib
+
 
 
 def demandator (path, verbose, n_results, threshold, plot):
@@ -52,7 +52,7 @@ def demandator (path, verbose, n_results, threshold, plot):
             try:
                 cursor.execute("SELECT * FROM images")
             except sqlite3.OperationalError:
-                cursor.execute('''CREATE TABLE images(image_hash TEXT NOT NULL, image_blob BLOB NOT NULL, prediction_accuracy REAL NOT NULL, PRIMARY KEY (imahe_hash))''')
+                cursor.execute('''CREATE TABLE images(image_hash TEXT NOT NULL, image_blob BLOB NOT NULL, prediction_accuracy REAL NOT NULL, PRIMARY KEY (image_hash))''')
             finally:
                 if len(cursor.execute("SELECT * FROM images WHERE image_hash=?", [imhash]).fetchall()) == 1:
                     cursor.execute("INSERT INTO images (image_hash, image_blob, prediction_accuracy) VALUES (?,?,?)", (imhash, blobim, accuracy))
@@ -74,35 +74,9 @@ def demandator (path, verbose, n_results, threshold, plot):
         if (count+1) == n_results:
             break
     if plot:
-        plotting(data)
+        plt.plotting(data)
     
     
     
-    
-    
-# function to plot graphs in terminal gived data
-# data kind: [(string, value), (string, value),,,]
-def plotting(data):
-    max_value = max(count for _, count in data)
-    increment = max_value / 25
-    longest_label_length = max(len(label) for label, _ in data)
-    for label, count in data:
 
-        # The ASCII block elements come in chunks of 8, so we work out how
-        # many fractions of 8 we need.
-        # https://en.wikipedia.org/wiki/Block_Elements
-        bar_chunks, remainder = divmod(int(count * 8 / increment), 8)
-
-        # First draw the full width chunks
-        bar = '█' * bar_chunks
-
-        # Then add the fractional part.  The Unicode code points for
-        # block elements are (8/8), (7/8), (6/8), ... , so we need to
-        # work backwards.
-        if remainder > 0:
-            bar += chr(ord('█') + (8 - remainder))
-
-        # If the bar is empty, add a left one-eighth block
-        bar = bar or  '▏'
-        print(f'{label.rjust(longest_label_length)} ▏ {count:#4d}% {bar}')
 
