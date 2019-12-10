@@ -3,26 +3,25 @@ import requests
 import ast
 import sqlite3
 import hashlib
+from PIL import Image
 
 
 
 def demandator (path, verbose, n_results, threshold, plot):
     url = 'https://fishidtest.herokuapp.com/api/test'
-    global conn
-    global cursor
     conn = sqlite3.connect('db_images.db')
     cursor = conn.cursor()
-
-    def convert_to_binary_data(path):
-        with open(path, 'rb') as file:
-            blobim = file.read()
-        return blobim
-
     try:
         files = {'file_field': open(path, 'rb')}
+        # check if file is image
+        Image.open(path)
     except FileNotFoundError:
         print('[ERROR] File not found. Make sure the path is correct and the file is available.')
-        return
+        exit()
+    except IOError:
+        print('[ERROR] The file is not an image.')
+        exit()
+    
     
     # to remove and substitute with logging module
     if verbose >= 2:
@@ -76,7 +75,10 @@ def demandator (path, verbose, n_results, threshold, plot):
     if plot:
         plt.plotting(data)
     
-    
-    
+def convert_to_binary_data(path):
+    with open(path, 'rb') as file:
+        blobim = file.read()
+    return blobim
+
 
 
