@@ -8,7 +8,7 @@ cursor = None
 def open_or_create():
     global conn
     global cursor
-    conn = sqlite3.connect('user-pwd.db')
+    conn = sqlite3.connect('./user-pwd.db')
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT * FROM user")

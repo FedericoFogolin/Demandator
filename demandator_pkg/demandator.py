@@ -46,7 +46,8 @@ def demandator (path, verbose, n_results, threshold, plot):
     data = []
     for count, i in enumerate (results):
         result = i.split(',')
-        #initiate the database and insert values in it
+        # initiate the database and insert values in it
+        # do it for first result on database
         if count == 0:
             accuracy = float(result[2])
             blobim = convert_to_binary_data(path)
