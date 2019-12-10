@@ -31,7 +31,11 @@ def demandator (path, verbose, n_results, threshold, plot):
         print('[INFO] Sending the image ...')
     # till here
     
-    r = requests.post(url, files=files)
+    try:
+        r = requests.post(url, files=files)
+    except requests.exceptions.ConnectionError:
+        print('[ERROR] Cannot connect to the server. Please verify your connection.')
+        return
     
     # to remove and substitute with logging module
     if verbose >= 1:
