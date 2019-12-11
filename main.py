@@ -2,7 +2,11 @@
 
 import argparse
 from demandator_pkg import demandator, db_handler
+import logging
+import verboselogs
 
+logger = verboselogs.VerboseLogger('demo')
+logger.addHandler(logging.StreamHandler())
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("path", type=str, help="insert the path of the image to analyze")
@@ -17,11 +21,11 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-    db_handler.open_or_create()
+    db_handler.open_or_create(args.verbose)
     if args.u and args.p:
-        if db_handler.check_for_username(args.u, args.p):
+        if db_handler.check_for_username(args.u, args.p, args.verbose):
             demandator.demandator(args.path, args.verbose, args.n_results, args.threshold, args.graph)
         else:
-            print('[ERROR] The User is not valid or the password is incorrect.')
+            logger.error('[ERROR] The User is not valid or the password is incorrect.')
     else:
-        print("[ERROR] No User has been selected or added. Type 'main.py -h' or 'main.py --help' for further Informations.")
+        logger.error("[ERROR] No User has been selected or added. Type 'main.py -h' or 'main.py --help' for further Informations.")

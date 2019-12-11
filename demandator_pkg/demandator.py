@@ -5,10 +5,21 @@ import sqlite3
 import hashlib
 from PIL import Image
 import cv2
-
+import logging
+import verboselogs
 
 
 def demandator (path, verbose, n_results, threshold, plot):
+    logger = verboselogs.VerboseLogger('demo')
+    logger.addHandler(logging.StreamHandler())
+
+    if verbose >= 2:
+        logger.setLevel(logging.SPAM)
+    elif verbose == 1:
+        logger.setLevel(logging.VERBOSE)
+    elif verbose == 0:
+        logger.setLevel(logging.WARNING)
+
     url = 'https://fishidtest.herokuapp.com/api/test'
     conn = sqlite3.connect('db_images.db')
     cursor = conn.cursor()
@@ -18,38 +29,29 @@ def demandator (path, verbose, n_results, threshold, plot):
         Image.open(path)
         cv2.imread(path)
     except FileNotFoundError:
-        print('[ERROR] File not found. Make sure the path is correct and the file is available.')
+        logger.error('[ERROR] File not found. Make sure the path is correct and the file is available.')
         exit()
     except IOError:
-        print('[ERROR] The file is not an image.')
+        logger.error('[ERROR] The file is not an image.')
         exit()
     except:
-        print('[ERROR] Error with reading the file.')
+        logger.error('[ERROR] Error with reading the file.')
     
-    
-    # to remove and substitute with logging module
-    if verbose >= 2:
-        print('[INFO] Getting the image from the path  :  ' + path)
-        print('[INFO] Sending the image to the API at  :  ' + url)
-    elif verbose == 1:
-        print('[INFO] Sending the image ...')
-    # till here
+    logger.spam('Getting the image from the path  :  ' + path)
+    logger.spam('Sending the image to the API at  :  ' + url)
     
     try:
         r = requests.post(url, files=files)
     except requests.exceptions.ConnectionError:
-        print('[ERROR] Cannot connect to the server. Please verify your connection.')
+        logger.error('[ERROR] Cannot connect to the server. Please verify your connection.')
         return
     
-    # to remove and substitute with logging module
-    if verbose >= 1:
-        print('[INFO] Getting the results ...')
-    # till here
+    logger.verbose('Getting the results ...')
     
     results = ast.literal_eval((r.content).decode("utf-8"))['results']
     if 'Error' in ast.literal_eval((r.content).decode("utf-8")):
-        print('[ERRORE] Errore nell\'immagine inviata al backend. L\'errore verrà riportato nella linea seguente.')
-        print('[ERRORE] Errore: {}').format(ast.literal_eval((r.content).decode("utf-8"))['Error'])
+        logger.error('[ERRORE] Errore nell\'immagine inviata al backend. L\'errore verrà riportato nella linea seguente.')
+        logger.error('[ERRORE] Errore: {}').format(ast.literal_eval((r.content).decode("utf-8"))['Error'])
         exit()
         
     data = []
