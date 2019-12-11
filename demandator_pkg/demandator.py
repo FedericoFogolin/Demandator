@@ -4,6 +4,7 @@ import ast
 import sqlite3
 import hashlib
 from PIL import Image
+import cv2
 
 
 
@@ -15,12 +16,15 @@ def demandator (path, verbose, n_results, threshold, plot):
         files = {'file_field': open(path, 'rb')}
         # check if file is image
         Image.open(path)
+        cv2.imread(path)
     except FileNotFoundError:
         print('[ERROR] File not found. Make sure the path is correct and the file is available.')
         exit()
     except IOError:
         print('[ERROR] The file is not an image.')
         exit()
+    except:
+        print('[ERROR] Error with reading the file.')
     
     
     # to remove and substitute with logging module
