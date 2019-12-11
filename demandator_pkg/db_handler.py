@@ -16,13 +16,13 @@ def open_or_create(verbose):
     elif verbose == 1:
         logger.setLevel(logging.VERBOSE)
     elif verbose == 0:
-        logger.setLevel(logging.WARNING)
+        logger.setLevel(logging.ERROR)
     
     global conn
     global cursor
     conn = sqlite3.connect('./user-pwd.db')
     cursor = conn.cursor()
-    logger.spam('Connecting to database...')
+    logger.verbose('Connecting to the DataBase...')
     try:
         cursor.execute("SELECT * FROM user")
     except sqlite3.OperationalError:
@@ -33,15 +33,25 @@ def open_or_create(verbose):
                      password CHAR(256) NOT NULL,
                      PRIMARY KEY (username))''')
 
-def open_database():
+def open_database(verbose):
+    if verbose >= 2:
+        logger.setLevel(logging.SPAM)
+    elif verbose == 1:
+        logger.setLevel(logging.VERBOSE)
+    elif verbose == 0:
+        logger.setLevel(logging.ERROR)
+    
     global conn
     global cursor
     conn = sqlite3.connect('user-pwd.db')
     cursor = conn.cursor()
+    logger.verbose('Connecting to the DataBase...')
     try:
         cursor.execute("SELECT * FROM user")
+        return True
     except:
-        logger.error('[ERROR] Cannot connect to the Database. Please check its existence or create a new one and add a new User')
+        logger.error('[ERROR] Cannot connect to the Database user table. Please check its existence or create a new one and add a new User')
+        return False
 
 
 def check_for_username (username, password, verbose):
@@ -50,7 +60,7 @@ def check_for_username (username, password, verbose):
     elif verbose == 1:
         logger.setLevel(logging.VERBOSE)
     elif verbose == 0:
-        logger.setLevel(logging.WARNING)
+        logger.setLevel(logging.ERROR)
     global conn
     global cursor
     
@@ -59,9 +69,8 @@ def check_for_username (username, password, verbose):
         salt = cursor.execute("SELECT salt FROM user WHERE username=?", [username]).fetchall()[0][0]
         conn.commit()
     except:
-        logger.error('[ERROR] Username is not present or password is invalid.')
         conn.close()
-        return
+        return False
     
     if salt:
         digest = salt + password
@@ -70,16 +79,24 @@ def check_for_username (username, password, verbose):
             digest = hashlib.sha256(digest.encode('utf-8')).hexdigest()
         
         rows = cursor.execute("SELECT * FROM user WHERE username=? and password=?", (username, digest))
-        #conn.commit()
+        conn.commit()
         results = rows.fetchall()
         conn.close()
         return results
     
 
-def save_new_username(username, password):
+def save_new_username(username, password, verbose):
+    if verbose >= 2:
+        logger.setLevel(logging.SPAM)
+    elif verbose == 1:
+        logger.setLevel(logging.VERBOSE)
+    elif verbose == 0:
+        logger.setLevel(logging.ERROR)
+    
     global conn
     global cursor
-    
+    logger.spam('Verifying if the Username and Password already exist...')
+
     rows = cursor.execute("SELECT * FROM user WHERE username=?",[username])
     conn.commit()
     if rows.fetchall():
@@ -87,8 +104,10 @@ def save_new_username(username, password):
         logger.error("[ERROR] The user already exists, add a different one.")
         return
     else:
+        logger.spam('You inserted a new user...')
         salt = str(random.random())
         digest = salt + password
+        logger.spam('Generating your hashed password...')
         for i in range(1000000):
             digest = hashlib.sha256(digest.encode('utf-8')).hexdigest()
         try:
@@ -99,5 +118,5 @@ def save_new_username(username, password):
             conn.close()
             return
         conn.close()
-        logger.error('[SUCCESS] A new user has been added to the database. Sign in with the new User.')
+        logger.success('[SUCCESS] A new user has been added to the database. Sign in with the new User.')
         return

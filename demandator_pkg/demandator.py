@@ -50,8 +50,8 @@ def demandator (path, verbose, n_results, threshold, plot):
     
     results = ast.literal_eval((r.content).decode("utf-8"))['results']
     if 'Error' in ast.literal_eval((r.content).decode("utf-8")):
-        logger.error('[ERRORE] Errore nell\'immagine inviata al backend. L\'errore verrà riportato nella linea seguente.')
-        logger.error('[ERRORE] Errore: {}').format(ast.literal_eval((r.content).decode("utf-8"))['Error'])
+        logger.error('[ERROR] Errore nell\'immagine inviata al backend. L\'errore verrà riportato nella linea seguente.')
+        logger.error('[ERROR] Errore: {}').format(ast.literal_eval((r.content).decode("utf-8"))['Error'])
         exit()
         
     data = []
@@ -63,6 +63,7 @@ def demandator (path, verbose, n_results, threshold, plot):
             accuracy = float(result[2])
             blobim = convert_to_binary_data(path)
             imhash = hashlib.sha256(blobim).hexdigest()
+            logger.spam('Saving the best result in our databse...')
 
             try:
                 cursor.execute("SELECT * FROM images")
