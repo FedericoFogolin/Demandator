@@ -47,6 +47,11 @@ def demandator (path, verbose, n_results, threshold, plot):
     # till here
     
     results = ast.literal_eval((r.content).decode("utf-8"))['results']
+    if 'Error' in ast.literal_eval((r.content).decode("utf-8")):
+        print('[ERRORE] Errore nell\'immagine inviata al backend. L\'errore verrà riportato nella linea seguente.')
+        print('[ERRORE] Errore: {}').format(ast.literal_eval((r.content).decode("utf-8"))['Error'])
+        exit()
+        
     data = []
     for count, i in enumerate (results):
         result = i.split(',')
