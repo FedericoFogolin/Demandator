@@ -1,8 +1,7 @@
 #! /usr/bin/env python3
 
 import argparse
-from demandator_pkg import demandator
-from scripts import db_handler
+from demandator_pkg import demandator, db_handler
 
 def parse_arguments():
     parser = argparse.ArgumentParser()

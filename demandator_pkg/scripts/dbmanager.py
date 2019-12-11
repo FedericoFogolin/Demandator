@@ -1,7 +1,12 @@
 import argparse
 import hashlib
 import sqlite3
-import db_handler
+import os
+
+print(os.path.dirname(os.path.abspath(__file__)))
+print(os.getcwd())
+
+from demandator_pkg import db_handler
 
 def parse_arguments1():
     parser = argparse.ArgumentParser()
