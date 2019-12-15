@@ -9,7 +9,23 @@ import logging
 import verboselogs
 
 
-def demandator (path, verbose, n_results, threshold, plot):
+def demandator(path, verbose, n_results, threshold, plot):
+    """
+    It takes an image and returns via API classification with probability levels.
+    ----------
+    Parameters
+    ----------
+    path : string
+        path of the image to analyze
+    verbose : int
+        level of verbosity of the function
+    n_results : int
+        nuber of results desired to show
+    threshold : float
+        minimum level of classification probability
+    plot : bool
+        enable plotting of results
+    """
     logger = verboselogs.VerboseLogger('demo')
     logger.addHandler(logging.StreamHandler())
 
@@ -54,9 +70,9 @@ def demandator (path, verbose, n_results, threshold, plot):
         logger.error('[ERROR] Error in the image. The error will be displayed in the next line.')
         logger.error('[ERROR] Error: {}').format(ast.literal_eval((r.content).decode("utf-8"))['Error'])
         exit()
-        
+
     data = []
-    for count, i in enumerate (results):
+    for count, i in enumerate(results):
         result = i.split(',')
         # initiate the database and insert values in it
         # do it for first result on database
@@ -69,17 +85,20 @@ def demandator (path, verbose, n_results, threshold, plot):
             try:
                 cursor.execute("SELECT * FROM images")
             except sqlite3.OperationalError:
-                cursor.execute('''CREATE TABLE images(image_hash TEXT NOT NULL, image_blob BLOB NOT NULL, prediction_accuracy REAL NOT NULL, PRIMARY KEY (image_hash))''')
+                cursor.execute(
+                    '''CREATE TABLE images(image_hash TEXT NOT NULL, image_blob BLOB NOT NULL, prediction_accuracy 
+                    REAL NOT NULL, PRIMARY KEY (image_hash))''')
             finally:
                 if len(cursor.execute("SELECT * FROM images WHERE image_hash=?", [imhash]).fetchall()) == 1:
-                    cursor.execute("INSERT INTO images (image_hash, image_blob, prediction_accuracy) VALUES (?,?,?)", (imhash, blobim, accuracy))
+                    cursor.execute("INSERT INTO images (image_hash, image_blob, prediction_accuracy) VALUES (?,?,?)",
+                                   (imhash, blobim, accuracy))
                     conn.commit()
 
-	# TODO solve string result if value is == 1.0 (really remote case)
+        # TODO solve string result if value is == 1.0 (really remote case)
         # check that prediction has accuracy >= of threshold (that is 0.0 as default)
         if float(result[2]) >= threshold:
-            data.append((result[1], int(float(result[2])*100)))
-            if plot != True:
+            data.append((result[1], int(float(result[2]) * 100)))
+            if not plot:
                 print('{}: {:.1%}'.format(result[1], float(result[2])))
         elif float(result[2]) < threshold:
             if count == 0:
@@ -88,16 +107,14 @@ def demandator (path, verbose, n_results, threshold, plot):
             break
         # stop iterations on the based on number of results asked
         # (count + 1) because enumerate starts from 0
-        if (count+1) == n_results:
+        if (count + 1) == n_results:
             break
     if plot:
         logger.spam('[INFO] preparing the graph.')
         plt.plotting(data)
-    
+
+
 def convert_to_binary_data(path):
     with open(path, 'rb') as file:
         blobim = file.read()
     return blobim
-
-
-

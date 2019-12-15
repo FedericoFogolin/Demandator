@@ -1,6 +1,14 @@
-# function to plot graphs in terminal gived data
+# function to plot graphs in terminal given data
 # data kind: [(string, value), (string, value),,,]
+
+
 def plotting(data):
+    """
+    Draws a graphical representation of classification results
+    ----------
+    data : json
+        results of demandator classification
+    """
     max_value = max(count for _, count in data)
     increment = max_value / 25
     longest_label_length = max(len(label) for label, _ in data)
@@ -21,5 +29,5 @@ def plotting(data):
             bar += chr(ord('█') + (8 - remainder))
 
         # If the bar is empty, add a left one-eighth block
-        bar = bar or  '▏'
+        bar = bar or '▏'
         print(f'{label.rjust(longest_label_length)} ▏ {count:#4d}% {bar}')

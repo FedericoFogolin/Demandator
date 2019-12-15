@@ -10,14 +10,18 @@ cursor = None
 logger = verboselogs.VerboseLogger('demo')
 logger.addHandler(logging.StreamHandler())
 
+
 def open_or_create(verbose):
+    """
+    Funtion to create users database or open it if already exist
+    """
     if verbose >= 2:
         logger.setLevel(logging.SPAM)
     elif verbose == 1:
         logger.setLevel(logging.VERBOSE)
     elif verbose == 0:
         logger.setLevel(logging.ERROR)
-    
+
     global conn
     global cursor
     conn = sqlite3.connect('./user-pwd.db')
@@ -33,7 +37,11 @@ def open_or_create(verbose):
                      password CHAR(256) NOT NULL,
                      PRIMARY KEY (username))''')
 
+
 def open_database(verbose):
+    """
+    Open current user database, retun False if database is not existent
+    """
     if verbose >= 2:
         logger.setLevel(logging.SPAM)
     elif verbose == 1:
@@ -50,11 +58,22 @@ def open_database(verbose):
         cursor.execute("SELECT * FROM user")
         return True
     except:
-        logger.error('[ERROR] Cannot connect to the Database user table. Please check its existence or create a new one and add a new User')
+        logger.error(
+            '[ERROR] Cannot connect to the Database user table. Please check its existence or create a new one and '
+            'add a new User')
         return False
 
 
-def check_for_username (username, password, verbose):
+def check_for_username(username, password, verbose):
+    """
+    Check if current user is present in the users database
+    ----------
+    Parameters
+    ----------
+    username : string
+    password : string
+    verbose : int
+    """
     if verbose >= 2:
         logger.setLevel(logging.SPAM)
     elif verbose == 1:
@@ -71,32 +90,42 @@ def check_for_username (username, password, verbose):
     except:
         conn.close()
         return False
-    
+
     if salt:
         digest = salt + password
+
         for i in range(1000000):
             digest = hashlib.sha256(digest.encode('utf-8')).hexdigest()
-        
+
         rows = cursor.execute("SELECT * FROM user WHERE username=? and password=?", (username, digest))
         conn.commit()
         results = rows.fetchall()
         conn.close()
         return results
-    
+
 
 def save_new_username(username, password, verbose):
+    """
+    Check if user already exist, if not creates new user and psw
+    ----------
+    Parameters
+    ----------
+    username : string
+    password : string
+    verbose : int
+    """
     if verbose >= 2:
         logger.setLevel(logging.SPAM)
     elif verbose == 1:
         logger.setLevel(logging.VERBOSE)
     elif verbose == 0:
         logger.setLevel(logging.ERROR)
-    
+
     global conn
     global cursor
     logger.spam('Verifying if the Username and Password already exist...')
 
-    rows = cursor.execute("SELECT * FROM user WHERE username=?",[username])
+    rows = cursor.execute("SELECT * FROM user WHERE username=?", [username])
     conn.commit()
     if rows.fetchall():
         conn.close()

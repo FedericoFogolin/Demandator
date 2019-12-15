@@ -7,6 +7,8 @@ import verboselogs
 
 logger = verboselogs.VerboseLogger('demo')
 logger.addHandler(logging.StreamHandler())
+
+
 def parse_arguments():
     # TODO find a way to hide or make homogeneus METAVAR
     parser = argparse.ArgumentParser()
@@ -22,6 +24,7 @@ def parse_arguments():
     args = parser.parse_args()
     return args
 
+
 if __name__ == "__main__":
     args = parse_arguments()
     if db_handler.open_database(args.verbose):
@@ -31,4 +34,6 @@ if __name__ == "__main__":
             else:
                 logger.error("[ERROR] The Username is not present or password is invalid.")
         else:
-            logger.error("[ERROR] No User has been selected or added. Type 'main.py -h' or 'main.py --help' for further Informations.")
+            logger.error(
+                "[ERROR] No User has been selected or added. Type 'main.py -h' or 'main.py --help' for further "
+                "information.")

@@ -4,8 +4,9 @@ import sqlite3
 import os
 import sys
 
-sys.path.append(".") # Adds higher directory to python modules path.
+sys.path.append(".")  # Adds higher directory to python modules path.
 from demandator_pkg import db_handler
+
 
 def parse_arguments1():
     parser = argparse.ArgumentParser()
@@ -14,6 +15,7 @@ def parse_arguments1():
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity parameter")
     args = parser.parse_args()
     return args
+
 
 if __name__ == "__main__":
     args = parse_arguments1()
