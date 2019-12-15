@@ -7,17 +7,23 @@ import verboselogs
 
 logger = verboselogs.VerboseLogger('demo')
 logger.addHandler(logging.StreamHandler())
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("path", type=str, help="insert the path of the image to analyze")
     parser.add_argument('-p', help="the username password", required=True)
-    parser.add_argument('-u', help="check for a usernamename and password (requires -p)", required=True)
+    parser.add_argument('-u', help="check for a username and password (requires -p)", required=True)
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity parameter")
-    parser.add_argument("-n", "--n_results", type = int, default=5,choices = range(1, 51, 1), help="insert number of results to show from 1 to 50")
-    parser.add_argument("-t", "--threshold", type = float, default=0.0, help="insert minimum treshold of accuracy for prediction to display ")
-    parser.add_argument("--graph", action='store_true', default=False, help="insert --graph if you want to see the graph of the prediction")
+    parser.add_argument("-n", "--n_results", type=int, default=5, choices=range(1, 51, 1),
+                        help="insert number of results to show from 1 to 50")
+    parser.add_argument("-t", "--threshold", type=float, default=0.0,
+                        help="insert minimum threshold of accuracy for prediction to display ")
+    parser.add_argument("--graph", action='store_true', default=False,
+                        help="insert --graph if you want to see the graph of the prediction")
     args = parser.parse_args()
     return args
+
 
 if __name__ == "__main__":
     args = parse_arguments()
@@ -28,4 +34,6 @@ if __name__ == "__main__":
             else:
                 logger.error('[ERROR] The Username is not present or password is invalid.')
         else:
-            logger.error("[ERROR] No User has been selected or added. Type 'main.py -h' or 'main.py --help' for further Informations.")
+            logger.error(
+                "[ERROR] No User has been selected or added. Type 'main.py -h' or 'main.py --help' for further "
+                "information.")

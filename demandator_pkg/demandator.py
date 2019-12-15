@@ -9,7 +9,23 @@ import logging
 import verboselogs
 
 
-def demandator (path, verbose, n_results, threshold, plot):
+def demandator(path, verbose, n_results, threshold, plot):
+    """
+    It takes an image and returns via API classification with probability levels.
+    ----------
+    Parameters
+    ----------
+    path : string
+        path of the image to analyze
+    verbose : int
+        level of verbosity of the function
+    n_results : int
+        nuber of results desired to show
+    threshold : float
+        minimum level of classification probability
+    plot : bool
+        enable plotting of results
+    """
     logger = verboselogs.VerboseLogger('demo')
     logger.addHandler(logging.StreamHandler())
 
@@ -36,26 +52,27 @@ def demandator (path, verbose, n_results, threshold, plot):
         exit()
     except:
         logger.error('[ERROR] Error with reading the file.')
-    
+
     logger.spam('Getting the image from the path  :  ' + path)
     logger.spam('Sending the image to the API at  :  ' + url)
-    
+
     try:
         r = requests.post(url, files=files)
     except requests.exceptions.ConnectionError:
         logger.error('[ERROR] Cannot connect to the server. Please verify your connection.')
         return
-    
+
     logger.verbose('Getting the results ...')
-    
-    results = ast.literal_eval((r.content).decode("utf-8"))['results']
-    if 'Error' in ast.literal_eval((r.content).decode("utf-8")):
-        logger.error('[ERROR] Errore nell\'immagine inviata al backend. L\'errore verrà riportato nella linea seguente.')
-        logger.error('[ERROR] Errore: {}').format(ast.literal_eval((r.content).decode("utf-8"))['Error'])
+
+    results = ast.literal_eval(r.content.decode("utf-8"))['results']
+    if 'Error' in ast.literal_eval(r.content.decode("utf-8")):
+        logger.error(
+            '[ERROR] Errore nell\'immagine inviata al backend. L\'errore verrà riportato nella linea seguente.')
+        logger.error('[ERROR] Errore: {}').format(ast.literal_eval(r.content.decode("utf-8"))['Error'])
         exit()
-        
+
     data = []
-    for count, i in enumerate (results):
+    for count, i in enumerate(results):
         result = i.split(',')
         # initiate the database and insert values in it
         # do it for first result on database
@@ -63,22 +80,25 @@ def demandator (path, verbose, n_results, threshold, plot):
             accuracy = float(result[2])
             blobim = convert_to_binary_data(path)
             imhash = hashlib.sha256(blobim).hexdigest()
-            logger.spam('Saving the best result in our databse...')
+            logger.spam('Saving the best result in our database...')
 
             try:
                 cursor.execute("SELECT * FROM images")
             except sqlite3.OperationalError:
-                cursor.execute('''CREATE TABLE images(image_hash TEXT NOT NULL, image_blob BLOB NOT NULL, prediction_accuracy REAL NOT NULL, PRIMARY KEY (image_hash))''')
+                cursor.execute(
+                    '''CREATE TABLE images(image_hash TEXT NOT NULL, image_blob BLOB NOT NULL, prediction_accuracy 
+                    REAL NOT NULL, PRIMARY KEY (image_hash))''')
             finally:
                 if len(cursor.execute("SELECT * FROM images WHERE image_hash=?", [imhash]).fetchall()) == 1:
-                    cursor.execute("INSERT INTO images (image_hash, image_blob, prediction_accuracy) VALUES (?,?,?)", (imhash, blobim, accuracy))
+                    cursor.execute("INSERT INTO images (image_hash, image_blob, prediction_accuracy) VALUES (?,?,?)",
+                                   (imhash, blobim, accuracy))
                     conn.commit()
 
-	# TODO solve string result if value is == 1.0 (really remote case)
+        # TODO solve string result if value is == 1.0 (really remote case)
         # check that prediction has accuracy >= of threshold (that is 0.0 as default)
         if float(result[2]) >= threshold:
-            data.append((result[1], int(float(result[2])*100)))
-            if plot != True:
+            data.append((result[1], int(float(result[2]) * 100)))
+            if not plot:
                 print('{}: {:.1%}'.format(result[1], float(result[2])))
         elif float(result[2]) < threshold:
             if count == 0:
@@ -87,15 +107,13 @@ def demandator (path, verbose, n_results, threshold, plot):
             break
         # stop iterations on the based on number of results asked
         # (count + 1) because enumerate starts from 0
-        if (count+1) == n_results:
+        if (count + 1) == n_results:
             break
     if plot:
         plt.plotting(data)
-    
+
+
 def convert_to_binary_data(path):
     with open(path, 'rb') as file:
         blobim = file.read()
     return blobim
-
-
-
