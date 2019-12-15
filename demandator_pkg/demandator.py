@@ -10,8 +10,7 @@ import verboselogs
 
 
 def demandator(path, verbose, n_results, threshold, plot):
-    """
-    It takes an image and returns via API classification with probability levels.
+    """It takes an image and returns via API classification with probability levels.
     ----------
     Parameters
     ----------
@@ -24,8 +23,7 @@ def demandator(path, verbose, n_results, threshold, plot):
     threshold : float
         minimum level of classification probability
     plot : bool
-        enable plotting of results
-    """
+        enable plotting of results"""
     logger = verboselogs.VerboseLogger('demo')
     logger.addHandler(logging.StreamHandler())
 
