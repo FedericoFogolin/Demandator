@@ -26,6 +26,7 @@ def demandator (path, verbose, n_results, threshold, plot):
     try:
         files = {'file_field': open(path, 'rb')}
         # check if file is image
+        logger.spam('[INFO] Checking image')
         Image.open(path)
         cv2.imread(path)
     except FileNotFoundError:
@@ -37,8 +38,8 @@ def demandator (path, verbose, n_results, threshold, plot):
     except:
         logger.error('[ERROR] Error with reading the file.')
     
-    logger.spam('Getting the image from the path  :  ' + path)
-    logger.spam('Sending the image to the API at  :  ' + url)
+    logger.spam('[INFO] Getting the image from the path:  ' + path)
+    logger.spam('[INFO] Sending the image to the API at:  ' + url)
     
     try:
         r = requests.post(url, files=files)
@@ -46,12 +47,12 @@ def demandator (path, verbose, n_results, threshold, plot):
         logger.error('[ERROR] Cannot connect to the server. Please verify your connection.')
         return
     
-    logger.verbose('Getting the results ...')
+    logger.verbose('[INFO] Getting the results')
     
     results = ast.literal_eval((r.content).decode("utf-8"))['results']
     if 'Error' in ast.literal_eval((r.content).decode("utf-8")):
-        logger.error('[ERROR] Errore nell\'immagine inviata al backend. L\'errore verrà riportato nella linea seguente.')
-        logger.error('[ERROR] Errore: {}').format(ast.literal_eval((r.content).decode("utf-8"))['Error'])
+        logger.error('[ERROR] Error in the image. The error will be displayed in the next line.')
+        logger.error('[ERROR] Error: {}').format(ast.literal_eval((r.content).decode("utf-8"))['Error'])
         exit()
         
     data = []
@@ -63,7 +64,7 @@ def demandator (path, verbose, n_results, threshold, plot):
             accuracy = float(result[2])
             blobim = convert_to_binary_data(path)
             imhash = hashlib.sha256(blobim).hexdigest()
-            logger.spam('Saving the best result in our databse...')
+            logger.spam('[INFO] Saving the best result in our databse')
 
             try:
                 cursor.execute("SELECT * FROM images")
@@ -90,6 +91,7 @@ def demandator (path, verbose, n_results, threshold, plot):
         if (count+1) == n_results:
             break
     if plot:
+        logger.spam('[INFO] preparing the graph.')
         plt.plotting(data)
     
 def convert_to_binary_data(path):

@@ -22,7 +22,7 @@ def open_or_create(verbose):
     global cursor
     conn = sqlite3.connect('./user-pwd.db')
     cursor = conn.cursor()
-    logger.verbose('Connecting to the DataBase...')
+    logger.verbose('[INFO] Connecting to the DataBase')
     try:
         cursor.execute("SELECT * FROM user")
     except sqlite3.OperationalError:
@@ -45,7 +45,7 @@ def open_database(verbose):
     global cursor
     conn = sqlite3.connect('user-pwd.db')
     cursor = conn.cursor()
-    logger.verbose('Connecting to the DataBase...')
+    logger.verbose('[INFO] Connecting to the DataBase')
     try:
         cursor.execute("SELECT * FROM user")
         return True
@@ -64,7 +64,7 @@ def check_for_username (username, password, verbose):
     global conn
     global cursor
     
-    logger.spam('Checking if user already exists...')
+    logger.spam('[INFO] Checking if user already exists')
     try:
         salt = cursor.execute("SELECT salt FROM user WHERE username=?", [username]).fetchall()[0][0]
         conn.commit()
@@ -74,7 +74,6 @@ def check_for_username (username, password, verbose):
     
     if salt:
         digest = salt + password
-        
         for i in range(1000000):
             digest = hashlib.sha256(digest.encode('utf-8')).hexdigest()
         
