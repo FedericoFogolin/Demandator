@@ -118,6 +118,7 @@ def save_new_username(username, password, verbose):
         logger.setLevel(logging.SPAM)
     elif verbose == 1:
         logger.setLevel(logging.VERBOSE)
+        logger.setLevel(logging.SUCCESS)
     elif verbose == 0:
         logger.setLevel(logging.ERROR)
 

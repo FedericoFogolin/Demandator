@@ -12,7 +12,8 @@ def parse_arguments1():
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', help="Username", required=True)
     parser.add_argument('-p', help="Password", required=True)
-    parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity parameter")
+    parser.add_argument("-v", "--verbose", action="count", default=0,
+                        help="increase verbosity parameter")
     args = parser.parse_args()
     return args
 
