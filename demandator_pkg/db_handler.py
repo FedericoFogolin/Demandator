@@ -4,6 +4,22 @@ import random
 import logging
 import verboselogs
 
+'''
+
+This is the module that Handels the access to the database. 
+It allows to open or create a database, add new users
+and verify their existence.
+ 
+Functions:
+- open_or_create: connects to the database (creating it if
+                  it doesn't exist) and creates the user table
+- open_database: connects to the database and retrieves an
+                 error if it doesn't exist
+- check_for_username: verifies the existence of a user
+- save_new_username: adds new username and password
+
+'''
+
 conn = None
 cursor = None
 
@@ -12,9 +28,15 @@ logger.addHandler(logging.StreamHandler())
 
 
 def open_or_create(verbose, db_file):
-    """
-    Function to create users database or open it if already exist
-    """
+    '''
+    Function that creates the users' database and related table or
+    opens it if it already exists.
+    ----------
+    Parameters
+    ----------
+    verbose : choose the verbosity level (type: int)
+    db_file : set the location of your database (type: str)
+    '''
     if verbose >= 2:
         logger.setLevel(logging.SPAM)
     elif verbose == 1:
@@ -39,16 +61,21 @@ def open_or_create(verbose, db_file):
 
 
 def open_database(verbose, db_file):
-    """
-    Open current user database, return False if database is not existent
-    """
+    '''
+    Open current users' database, return False if database doesn't exist
+    ----------
+    Parameters
+    ----------
+    verbose : choose the verbosity level (type: int)
+    db_file : set the location of your database (type: str)
+    '''
     if verbose >= 2:
         logger.setLevel(logging.SPAM)
     elif verbose == 1:
         logger.setLevel(logging.VERBOSE)
     elif verbose == 0:
         logger.setLevel(logging.ERROR)
-    
+
     global conn
     global cursor
     conn = sqlite3.connect(db_file)
@@ -57,16 +84,16 @@ def open_database(verbose, db_file):
     try:
         cursor.execute("SELECT * FROM user")
         return True
-    except:
-        logger.error(
-            '[ERROR] Cannot connect to the Database user table. Please check its existence or create a new one and '
-            'add a new User')
+    except sqlite3.OperationalError:
+        logger.error('''[ERROR] Cannot connect to the Database
+                     user table. Please check its existence
+                     or create a new one and add a new User''')
         return False
 
 
 def check_for_username(username, password, verbose):
     """
-    Check if current user is present in the users database
+    Check if current user is present in the users' database
     ----------
     Parameters
     ----------
@@ -82,12 +109,13 @@ def check_for_username(username, password, verbose):
         logger.setLevel(logging.ERROR)
     global conn
     global cursor
-    
+
     logger.spam('[INFO] Checking if user already exists')
     try:
-        salt = cursor.execute("SELECT salt FROM user WHERE username=?", [username]).fetchall()[0][0]
+        salt = cursor.execute("SELECT salt FROM user WHERE username=?",
+                              [username]).fetchall()[0][0]
         conn.commit()
-    except:
+    except sqlite3.OperationalError:
         conn.close()
         return False
 
@@ -97,7 +125,8 @@ def check_for_username(username, password, verbose):
         for i in range(1000000):
             digest = hashlib.sha256(digest.encode('utf-8')).hexdigest()
 
-        rows = cursor.execute("SELECT * FROM user WHERE username=? and password=?", (username, digest))
+        rows = cursor.execute("SELECT * FROM user WHERE username=?
+                              and password=?", (username, digest))
         conn.commit()
         results = rows.fetchall()
         conn.close()
@@ -140,12 +169,15 @@ def save_new_username(username, password, verbose):
         for i in range(1000000):
             digest = hashlib.sha256(digest.encode('utf-8')).hexdigest()
         try:
-            cursor.execute("INSERT OR REPLACE INTO user VALUES (?,?,?)", (username, salt, digest))
+            cursor.execute("INSERT OR REPLACE INTO user VALUES (?,?,?)",
+                           (username, salt, digest))
             conn.commit()
         except:
-            logger.error('[ERROR] Something went wrong while adding the new User')
+            logger.error('''[ERROR] Something went wrong while adding
+                         the new User''')
             conn.close()
             return
         conn.close()
-        logger.success('[SUCCESS] A new user has been added to the database. Sign in with the new User.')
+        logger.success('''[SUCCESS] A new user has been added to the database.
+                       Sign in with the new User.''')
         return

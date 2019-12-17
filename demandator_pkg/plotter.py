@@ -1,14 +1,18 @@
-# function to plot graphs in terminal given data
-# data kind: [(string, value), (string, value),,,]
+'''
+This module contains a function that plots graphs in the 
+terminal given data.
+Data kind: [(string, value), (string, value),,,]
+'''
+
 
 
 def plotting(data):
-    """
+    '''
     Draws a graphical representation of classification results
     ----------
     data : json
         results of demandator classification
-    """
+    '''
     max_value = max(count for _, count in data)
     increment = max_value / 25
     longest_label_length = max(len(label) for label, _ in data)
