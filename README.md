@@ -14,20 +14,32 @@ Demandator is a package to use to ask image classification of images from your s
 
 Demandator requires [Python](https://www.python.org/downloads/release/python-360/) 3.6 to run.
 
-Download the package and install the dependencies.
+Before you can actually start, you will need to install some required packages. On Debian based distributions, you can do this by simple running
+```bash
+sudo apt install git
+```
 
-**1) Open folder in terminal**
-**2) Create a new user with the following command**
+Clone the repository and install the dependencies.
+
+**1) Clone the repository**
 ```bash
-$ python demandator_pkg/scripts/dbmanager.py -a <name_user> -p <password>
+$ git clone https://github.com/FedericoFogolin/demandator.git
 ```
-**3) Test the program with one the images provided**
+**2) Enter the repository from the folder  where you downloaded the file**
 ```bash
-$ python main.py test_images/test.jpg -p <password> -u <username>
+$ cd demandator
 ```
-**4) If everything worked properly (🤞) you can run the classificator with your own files**
+**3) Create a new user with the following command**
 ```bash
-$ python main.py <image-path> -p <password> -u <username>
+$ python3 demandator_pkg/scripts/dbmanager.py -a <name_user> -p <password>
+```
+**4) Test the program with one of the images provided**
+```bash
+$ python3 main.py test_images/test.jpg -u <username> -p <password>
+```
+**5) If everything worked out properly (🤞), you can run the classificator with your own files**
+```bash
+$ python3  main.py <image-path> -u <username> -p <password>
 ```
 
 ### Optional Arguments

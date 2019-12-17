@@ -125,8 +125,8 @@ def check_for_username(username, password, verbose):
         for i in range(1000000):
             digest = hashlib.sha256(digest.encode('utf-8')).hexdigest()
 
-        rows = cursor.execute("SELECT * FROM user WHERE username=?
-                              and password=?", (username, digest))
+        rows = cursor.execute('''SELECT * FROM user WHERE username=?
+                              and password=?''', (username, digest))
         conn.commit()
         results = rows.fetchall()
         conn.close()
