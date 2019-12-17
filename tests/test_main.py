@@ -15,6 +15,10 @@ class TestMain(unittest.TestCase):
     def test_wrong_username(self):
         user = db_handler.check_for_username('abcd', 'abcd', 0)
         self.assertFalse(user)
+    
+    def test_wrong_username_type(self):
+        user = db_handler.check_for_username(3, 3, 0)
+        self.assertFalse(user)
 
     def test_correct_username(self):
         user = db_handler.check_for_username('enrico', 'enrico', 0)
