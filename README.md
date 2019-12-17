@@ -3,10 +3,10 @@
 Demandator is a package to use to ask image classification of images from your shell.
 
 ### Features
-- Classify images
-- Plot graph of prediction
-- Save results to improve the AI model throught transfer learning 
-- Manage users 
+- 🔍 Classify images
+- 📊 Plot graph of prediction
+- 💾 Save results to improve the AI model throught transfer learning 
+- 👥 Manage users 
 
 
 
@@ -63,10 +63,10 @@ Demandator uses a number of modules to work properly, so make sure to have them 
 
 ### Future Features
 
-  - Manage maximum number of calls throught access tokens 
-  - Classify multiple images at once 
-  - Possibility to switch from classification to object detection and back
-  - Display detected object boundaries 
+  - 🔑 Manage maximum number of calls throught access tokens 
+  - 📸 Classify multiple images at once 
+  - 🔍Possibility to switch from classification to object detection and back
+  - 📌Display detected object boundaries 
 
 ### Authors
 
