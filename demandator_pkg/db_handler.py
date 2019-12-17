@@ -11,9 +11,9 @@ logger = verboselogs.VerboseLogger('demo')
 logger.addHandler(logging.StreamHandler())
 
 
-def open_or_create(verbose):
+def open_or_create(verbose, db_file):
     """
-    Funtion to create users database or open it if already exist
+    Function to create users database or open it if already exist
     """
     if verbose >= 2:
         logger.setLevel(logging.SPAM)
@@ -24,7 +24,7 @@ def open_or_create(verbose):
 
     global conn
     global cursor
-    conn = sqlite3.connect('./user-pwd.db')
+    conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     logger.verbose('[INFO] Connecting to the DataBase')
     try:
@@ -38,9 +38,9 @@ def open_or_create(verbose):
                      PRIMARY KEY (username))''')
 
 
-def open_database(verbose):
+def open_database(verbose, db_file):
     """
-    Open current user database, retun False if database is not existent
+    Open current user database, return False if database is not existent
     """
     if verbose >= 2:
         logger.setLevel(logging.SPAM)
@@ -51,7 +51,7 @@ def open_database(verbose):
     
     global conn
     global cursor
-    conn = sqlite3.connect('user-pwd.db')
+    conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     logger.verbose('[INFO] Connecting to the DataBase')
     try:

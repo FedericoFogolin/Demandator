@@ -39,7 +39,7 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-    if db_handler.open_database(args.verbose):
+    if db_handler.open_database(args.verbose, './user-pwd.db'):
         if args.username and args.password:
             if db_handler.check_for_username(args.username, args.password,
                                              args.verbose):

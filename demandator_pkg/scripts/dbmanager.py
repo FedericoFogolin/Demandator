@@ -19,7 +19,7 @@ def parse_arguments1():
 
 
 if __name__ == "__main__":
-    args = parse_arguments1()
-    db_handler.open_or_create(args.verbose)
+    args = parse_arguments1() 
+    db_handler.open_or_create(args.verbose, './user-pwd.db')
     if args.a and args.p:
         db_handler.save_new_username(args.a, args.p, args.verbose)
