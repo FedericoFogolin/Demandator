@@ -78,7 +78,7 @@ Demandator uses a number of modules to work properly, so make sure to have them 
 ### License
 ----
 
-MIT
+GPL
 
 
-**Free Software, Hell Yeah!**
+**Free Software 4ever, Hell Yeah!**
