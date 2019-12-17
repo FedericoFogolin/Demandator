@@ -2,7 +2,7 @@
 
 Demandator is a package to use to ask image classification of images from your shell.
 
-### Features
+## Features
 - 🔍 Classify images
 - 📊 Plot graph of prediction
 - 💾 Save results to improve the AI model throught transfer learning 
@@ -10,7 +10,7 @@ Demandator is a package to use to ask image classification of images from your s
 
 
 
-### Gettin' Started
+## Gettin' Started
 
 Demandator requires [Python](https://www.python.org/downloads/release/python-360/) 3.6 to run.
 
@@ -53,11 +53,18 @@ You can add one or more of the below arguments to personalize your queries
 | -t | 0.0 | 0.00 <= Float <= 0.99  | Limit results to that minimum threshold |
 
 
+## Tests
+You can also run a series of tests in order to verify that the program behaves correctly with different inputs. To be able to do that we implemented a test suite which you can run by typing the following while being in the **demandator** folder:
+
+```bash
+$ python3 -m unittest -v -b tests/test_main.py
+```
+
 ### Technologies
 Demandator is created with:
 - [Python 3.6](https://www.python.org/downloads/release/python-360/)
 
-### Modules
+## Modules
 Demandator uses a number of modules to work properly, so make sure to have them properly installed:
 
 * [numpy](https://pypi.org/project/numpy/) - NumPy is the fundamental package for scientific computing with Python
@@ -73,7 +80,7 @@ Demandator uses a number of modules to work properly, so make sure to have them 
 * [logging](https://docs.python.org/2/library/logging.html) - Logging facility for Python
 * [verboselogs](https://pypi.org/project/verboselogs/) - Verbose logging level for Python's logging module
 
-### Future Features
+## Future Features
 
   - 🔑 Manage maximum number of calls throught access tokens 
   - 📸 Classify multiple images at once 
