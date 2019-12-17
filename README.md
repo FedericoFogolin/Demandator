@@ -38,7 +38,7 @@ You can add one or more of the below arguments to personalize your queries
 | -g | off | None | Plot the graph of predictions |
 | -n | 5 | 1-50 | Number of results to display |
 | -v | off | count <= 2 | Display verbosity |
-| -t | 0.0 | 0 <= Float <= 1  | Limit results to that minimum threshold |
+| -t | 0.0 | 0.00 <= Float <= 0.99  | Limit results to that minimum threshold |
 
 
 ### Technologies
