@@ -6,10 +6,10 @@ import verboselogs
 
 '''
 
-This is the module that Handels the access to the database. 
+This is the module that Handels the access to the database.
 It allows to open or create a database, add new users
 and verify their existence.
- 
+
 Functions:
 - open_or_create: connects to the database (creating it if
                   it doesn't exist) and creates the user table
@@ -115,7 +115,7 @@ def check_for_username(username, password, verbose):
         salt = cursor.execute("SELECT salt FROM user WHERE username=?",
                               [username]).fetchall()[0][0]
         conn.commit()
-    except sqlite3.OperationalError:
+    except IndexError:
         conn.close()
         return False
 
