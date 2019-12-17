@@ -11,14 +11,26 @@ logger.addHandler(logging.StreamHandler())
 
 
 def parse_arguments():
-    # TODO find a way to hide or make homogeneus METAVAR
+    '''This function parses all the parameters inserted in the command line
+    ----------
+    Parameters
+    ----------
+    -p : username's password
+    -u : check for an username and a password
+    -v : increase verbosity parameter
+    -n : number of results to show
+    -t : minimum threshold of accuracy for prediction to display
+    -g : graph of the prediction
+    '''
+
+    # TODO find a way to hide or make homogeneous METAVAR
     parser = argparse.ArgumentParser()
     parser.add_argument("image_path", type=str,
-                        help="insert the path of the image to analyze")
-    parser.add_argument("-p", "--password", help="the username password",
+                        help="insert the path of the image to analyse")
+    parser.add_argument("-p", "--password", help="the username's password",
                         required=True)
     parser.add_argument("-u", "--username",
-                        help="""check for a usernamename and password
+                        help="""check for a username and password
                         (requires -p)""", required=True)
     # TODO limit maximum number of -v to 2 and alert the user
     parser.add_argument("-v", "--verbose", action="count", default=0,
@@ -27,8 +39,8 @@ def parse_arguments():
                         choices=range(1, 51, 1),
                         help="insert number of results to show from 1 to 50")
     parser.add_argument("-t", "--threshold", type=float, default=0.0,
-                        choices=around(arange(0, 1, 0.01),2),
-                        help="""insert minimum treshold of accuracy for
+                        choices=around(arange(0, 1, 0.01), 2),
+                        help="""insert minimum threshold of accuracy for
                         prediction to display""")
     parser.add_argument("-g", "--graph", action="store_true", default=False,
                         help="""insert -g if you want to see the graph of
